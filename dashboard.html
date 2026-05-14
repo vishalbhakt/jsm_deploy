@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard – JSM Shiksha Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="./logo.jpeg" alt="JSM" onerror="this.style.display='none'"/>
+    <div>
+      <span class="sl-name">JSM</span>
+      <span class="sl-sub">SHIKSHA ACADEMY</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="sn-item active" data-section="overview"><span>🏠</span>Dashboard</a>
+    <a href="#" class="sn-item" data-section="notes"><span>📝</span>Notes</a>
+    <a href="#" class="sn-item" data-section="assignments"><span>📋</span>Assignments</a>
+    <a href="#" class="sn-item" data-section="practicals"><span>🔬</span>Practicals</a>
+    <a href="#" class="sn-item" data-section="videos"><span>🎬</span>Video Lectures</a>
+    <a href="#" class="sn-item" data-section="announcements"><span>📢</span>Announcements</a>
+    <a href="#" class="sn-item" data-section="tests"><span>✏️</span>Tests &amp; Quizzes</a>
+    <a href="#" class="sn-item" data-section="attendance"><span>📅</span>Attendance</a>
+    <a href="#" class="sn-item" data-section="progress"><span>📈</span>Progress</a>
+    <a href="#" class="sn-item" data-section="payments"><span>💳</span>Payments</a>
+    <a href="#" class="sn-item" data-section="profile"><span>👤</span>Profile</a>
+  </nav>
+  <a href="index.html" class="sn-logout"><span>🚪</span>Logout</a>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <div class="tb-breadcrumb" id="breadcrumb">Dashboard</div>
+    <div class="tb-user">
+      <div class="user-avatar">A</div>
+      <div>
+        <div class="user-name">Hello, Aarav Sharma</div>
+        <div class="user-class">Class 6</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT AREA -->
+  <main class="content">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <section id="sec-overview" class="section active">
+      <h1 class="sec-title">Welcome back, Aarav! 👋</h1>
+      <p class="sec-sub">Class 6 &nbsp;|&nbsp; Academic Year 2024-25</p>
+
+      <div class="stat-cards">
+        <div class="stat-card"><div class="sc-val">18</div><div class="sc-label">Notes</div><a href="#" class="sc-link" data-section="notes">View Notes</a></div>
+        <div class="stat-card"><div class="sc-val">7</div><div class="sc-label">Assignments</div><a href="#" class="sc-link" data-section="assignments">View All</a></div>
+        <div class="stat-card"><div class="sc-val">12</div><div class="sc-label">Practicals</div><a href="#" class="sc-link" data-section="practicals">View All</a></div>
+        <div class="stat-card"><div class="sc-val">24</div><div class="sc-label">Videos</div><a href="#" class="sc-link" data-section="videos">Watch Now</a></div>
+        <div class="stat-card"><div class="sc-val">5</div><div class="sc-label">Announcements</div><a href="#" class="sc-link" data-section="announcements">View All</a></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3 class="card-title">Recent Announcements</h3>
+          <ul class="ann-list">
+            <li><div><strong>Summer Holiday Notice</strong><p>School will remain closed from 25 May to 10 June.</p></div><span class="ann-date">20 May, 2024</span></li>
+            <li><div><strong>PTM Meeting</strong><p>PTM will be held on 18 May 2024 (Saturday).</p></div><span class="ann-date">15 May, 2024</span></li>
+            <li><div><strong>Sports Day</strong><p>Annual Sports Day on 28 May 2024.</p></div><span class="ann-date">10 May, 2024</span></li>
+          </ul>
+          <a href="#" class="view-all-link" data-section="announcements">View All →</a>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Upcoming Assignments</h3>
+          <ul class="assign-list">
+            <li><div class="al-dot pending"></div><div><strong>Maths Worksheet</strong><small>Due: 21 May, 2024</small></div><span class="tag pending-tag">Pending</span></li>
+            <li><div class="al-dot pending"></div><div><strong>Science Practical File</strong><small>Due: 27 May, 2024</small></div><span class="tag pending-tag">Pending</span></li>
+            <li><div class="al-dot sub"></div><div><strong>English Grammar</strong><small>Due: 30 May, 2024</small></div><span class="tag sub-tag">Submitted</span></li>
+          </ul>
+          <a href="#" class="view-all-link" data-section="assignments">View All →</a>
+        </div>
+      </div>
+
+      <div class="card mt16">
+        <h3 class="card-title">Your Progress</h3>
+        <div class="progress-row">
+          <div class="pr-item"><span>Overall</span><div class="pbar"><div class="pb-fill" style="width:72%;background:#0a1e4f"></div></div><b>72%</b></div>
+          <div class="pr-item"><span>Maths</span><div class="pbar"><div class="pb-fill" style="width:78%;background:#2563eb"></div></div><b>78%</b></div>
+          <div class="pr-item"><span>Science</span><div class="pbar"><div class="pb-fill" style="width:65%;background:#16a34a"></div></div><b>65%</b></div>
+          <div class="pr-item"><span>English</span><div class="pbar"><div class="pb-fill" style="width:70%;background:#9333ea"></div></div><b>70%</b></div>
+          <div class="pr-item"><span>Hindi</span><div class="pbar"><div class="pb-fill" style="width:75%;background:#ea580c"></div></div><b>75%</b></div>
+          <div class="pr-item"><span>SST</span><div class="pbar"><div class="pb-fill" style="width:68%;background:#c9a84c"></div></div><b>68%</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ NOTES ═══ -->
+    <section id="sec-notes" class="section">
+      <h1 class="sec-title">My Notes</h1>
+      <div class="filters">
+        <select id="notesClass"><option>Class 6</option><option>Class 7</option><option>Class 8</option></select>
+        <select id="notesSubject"><option>All Subjects</option><option>Mathematics</option><option>Science</option><option>English</option><option>Hindi</option><option>SST</option></select>
+      </div>
+      <div class="notes-grid">
+        <div class="note-card"><div class="note-icon">📘</div><div class="note-info"><strong>Mathematics</strong><small>Images and Whole Numbers</small><span class="note-meta">PDF · 2.4 MB · 20 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+        <div class="note-card"><div class="note-icon">📗</div><div class="note-info"><strong>Science</strong><small>The Living Organisms</small><span class="note-meta">PDF · 1.8 MB · 18 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+        <div class="note-card"><div class="note-icon">📙</div><div class="note-info"><strong>English</strong><small>Nouns and Pronouns</small><span class="note-meta">PDF · 1.1 MB · 15 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+        <div class="note-card"><div class="note-icon">📕</div><div class="note-info"><strong>Hindi</strong><small>संज्ञा एवं सर्वनाम</small><span class="note-meta">PDF · 2.2 MB · 20 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+        <div class="note-card"><div class="note-icon">📒</div><div class="note-info"><strong>SST</strong><small>The Earth in the Solar System</small><span class="note-meta">PDF · 2.7 MB · 06 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+        <div class="note-card"><div class="note-icon">📓</div><div class="note-info"><strong>Computer</strong><small>More on My Next</small><span class="note-meta">PDF · 1.6 MB · 08 May, 2024</span></div><button class="btn-dl">⬇ Download</button></div>
+      </div>
+    </section>
+
+    <!-- ═══ ASSIGNMENTS ═══ -->
+    <section id="sec-assignments" class="section">
+      <h1 class="sec-title">Assignments</h1>
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="all">All</button>
+        <button class="tab-btn" data-tab="pending">Pending</button>
+        <button class="tab-btn" data-tab="submitted">Submitted</button>
+        <button class="tab-btn" data-tab="evaluated">Evaluated</button>
+      </div>
+      <div class="assign-table">
+        <div class="at-row header"><span>Assignment</span><span>Subject</span><span>Due Date</span><span>Status</span></div>
+        <div class="at-row" data-status="pending"><span><strong>Maths Worksheet</strong><br><small>Chapter 2 – Whole Numbers</small></span><span>Mathematics</span><span>21 May, 2024</span><span><span class="tag pending-tag">Pending</span></span></div>
+        <div class="at-row" data-status="pending"><span><strong>Science Practical File</strong><br><small>Form Observation</small></span><span>Science</span><span>27 May, 2024</span><span><span class="tag pending-tag">Pending</span></span></div>
+        <div class="at-row" data-status="submitted"><span><strong>English Grammar</strong><br><small>Tenses Worksheet</small></span><span>English</span><span>15 May, 2024</span><span><span class="tag sub-tag">Submitted</span></span></div>
+        <div class="at-row" data-status="pending"><span><strong>SST Project</strong><br><small>Our National Symbols</small></span><span>SST</span><span>02 Jun, 2024</span><span><span class="tag pending-tag">Pending</span></span></div>
+        <div class="at-row" data-status="evaluated"><span><strong>Hindi Worksheet</strong><br><small>संज्ञा के भेद</small></span><span>Hindi</span><span>03 Jun, 2024</span><span><span class="tag eval-tag">Evaluated</span></span></div>
+      </div>
+    </section>
+
+    <!-- ═══ PRACTICALS ═══ -->
+    <section id="sec-practicals" class="section">
+      <h1 class="sec-title">Practicals</h1>
+      <div class="tab-bar">
+        <button class="tab-btn active">All Practicals</button>
+        <button class="tab-btn">My Submissions</button>
+      </div>
+      <div class="prac-list">
+        <div class="prac-card"><div class="prac-icon">🔬</div><div class="prac-info"><strong>Science Practical – 1</strong><small>Identification of Plant Parts · PDF · 1.1 MB</small><span>19 May, 2024</span></div><button class="btn-sub">Submitted</button></div>
+        <div class="prac-card"><div class="prac-icon">⚗️</div><div class="prac-info"><strong>Science Practical – 2</strong><small>Experiment on Water Filtration · PDF</small><span>24 May, 2024</span></div><span class="tag pending-tag">Pending</span></div>
+        <div class="prac-card"><div class="prac-icon">💻</div><div class="prac-info"><strong>Computer Practical – 1</strong><small>Creating a Document in MS Word · PDF · 1.3 MB</small><span>05 Jun, 2024</span></div><button class="btn-sub">Submitted</button></div>
+        <div class="prac-card prac-upload"><div class="pu-inner"><span>☁️</span><p>Upload File</p><small>PDF, DOC up to 10 MB</small></div></div>
+      </div>
+    </section>
+
+    <!-- ═══ VIDEOS ═══ -->
+    <section id="sec-videos" class="section">
+      <h1 class="sec-title">Video Lectures</h1>
+      <div class="filters">
+        <select><option>Class 6</option><option>Class 7</option></select>
+        <select><option>All Subjects</option><option>Mathematics</option><option>Science</option><option>English</option></select>
+      </div>
+      <div class="video-grid">
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#1e3a5f,#2563eb)"><span class="play-btn">▶</span></div><div class="vi"><strong>Fractions</strong><small>Mathematics</small></div></div>
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#14532d,#16a34a)"><span class="play-btn">▶</span></div><div class="vi"><strong>Human Digestive System</strong><small>Science</small></div></div>
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#4c1d95,#9333ea)"><span class="play-btn">▶</span></div><div class="vi"><strong>Nouns and Pronouns</strong><small>English</small></div></div>
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#7c2d12,#ea580c)"><span class="play-btn">▶</span></div><div class="vi"><strong>Our Earth</strong><small>SST</small></div></div>
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#0a1e4f,#1e40af)"><span class="play-btn">▶</span></div><div class="vi"><strong>Data Handling</strong><small>Mathematics</small></div></div>
+        <div class="video-card"><div class="video-thumb" style="background:linear-gradient(135deg,#064e3b,#059669)"><span class="play-btn">▶</span></div><div class="vi"><strong>Types of Sentences</strong><small>English</small></div></div>
+      </div>
+    </section>
+
+    <!-- ═══ ANNOUNCEMENTS ═══ -->
+    <section id="sec-announcements" class="section">
+      <h1 class="sec-title">Announcements</h1>
+      <div class="ann-full-list">
+        <div class="ann-full-card imp"><span class="ann-badge">Important</span><h4>Summer Holiday Notice</h4><p>School will remain closed from 25 May to 10 June 2024.</p><span class="ann-date">20 May, 2024</span></div>
+        <div class="ann-full-card"><span class="ann-badge info">Info</span><h4>PTM Meeting</h4><p>PTM will be held on 18 May 2024 (Saturday). Parents are requested to attend.</p><span class="ann-date">15 May, 2024</span></div>
+        <div class="ann-full-card"><span class="ann-badge info">Info</span><h4>Annual Sports Day</h4><p>Annual Sports Day on 28 May 2024. Students must wear sports uniform.</p><span class="ann-date">10 May, 2024</span></div>
+        <div class="ann-full-card imp"><span class="ann-badge">Important</span><h4>Fee Submission Deadline</h4><p>Last date for fee submission is 30 May 2024. Late fee of ₹50/day will apply.</p><span class="ann-date">05 May, 2024</span></div>
+        <div class="ann-full-card"><span class="ann-badge info">Info</span><h4>New Books Available</h4><p>New textbooks for Class 6 are now available in the school office.</p><span class="ann-date">01 May, 2024</span></div>
+      </div>
+    </section>
+
+    <!-- ═══ TESTS ═══ -->
+    <section id="sec-tests" class="section">
+      <h1 class="sec-title">Tests &amp; Quizzes</h1>
+      <div class="tab-bar">
+        <button class="tab-btn active">Upcoming</button>
+        <button class="tab-btn">Ongoing</button>
+        <button class="tab-btn">Completed</button>
+      </div>
+      <div class="tests-list">
+        <div class="test-card"><div class="test-info"><h4>Maths Quiz</h4><small>Whole Numbers · 21 May, 2024 · 10 Marks</small></div><button class="btn-start">Start Quiz</button></div>
+        <div class="test-card"><div class="test-info"><h4>Science Test</h4><small>The Living Organisms · 22 May, 2024 · 20 Marks</small></div><button class="btn-start">Start Quiz</button></div>
+        <div class="test-card"><div class="test-info"><h4>English Test</h4><small>Nouns and Pronouns · 10 May, 2024 · 20 Marks</small></div><button class="btn-start">Start Quiz</button></div>
+      </div>
+    </section>
+
+    <!-- ═══ ATTENDANCE ═══ -->
+    <section id="sec-attendance" class="section">
+      <h1 class="sec-title">Attendance</h1>
+      <div class="two-col">
+        <div class="card">
+          <h3 class="card-title">May 2024</h3>
+          <div class="cal-grid">
+            <div class="cal-day-name">Sun</div><div class="cal-day-name">Mon</div><div class="cal-day-name">Tue</div><div class="cal-day-name">Wed</div><div class="cal-day-name">Thu</div><div class="cal-day-name">Fri</div><div class="cal-day-name">Sat</div>
+            <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day p">1</div><div class="cal-day p">2</div><div class="cal-day p">3</div><div class="cal-day w">4</div>
+            <div class="cal-day w">5</div><div class="cal-day p">6</div><div class="cal-day p">7</div><div class="cal-day p">8</div><div class="cal-day p">9</div><div class="cal-day p">10</div><div class="cal-day w">11</div>
+            <div class="cal-day w">12</div><div class="cal-day p">13</div><div class="cal-day p">14</div><div class="cal-day p">15</div><div class="cal-day a">16</div><div class="cal-day p">17</div><div class="cal-day w">18</div>
+            <div class="cal-day w">19</div><div class="cal-day p">20</div><div class="cal-day p">21</div><div class="cal-day a">22</div><div class="cal-day p">23</div><div class="cal-day p">24</div><div class="cal-day w">25</div>
+            <div class="cal-day w">26</div><div class="cal-day p">27</div><div class="cal-day p">28</div><div class="cal-day p">29</div><div class="cal-day p">30</div><div class="cal-day p">31</div><div class="cal-day empty"></div>
+          </div>
+          <div class="cal-legend">
+            <span><span class="leg p"></span>Present</span>
+            <span><span class="leg a"></span>Absent</span>
+            <span><span class="leg w"></span>Weekend/Holiday</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Attendance Summary</h3>
+          <div class="att-stats">
+            <div class="att-stat"><span class="att-num">20</span><span class="att-label">Present Days</span></div>
+            <div class="att-stat ab"><span class="att-num">3</span><span class="att-label">Absent Days</span></div>
+            <div class="att-perc">
+              <div class="att-perc-val">87%</div>
+              <div class="att-perc-label">Attendance</div>
+              <div class="pbar big"><div class="pb-fill" style="width:87%;background:#16a34a"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PROGRESS ═══ -->
+    <section id="sec-progress" class="section">
+      <h1 class="sec-title">My Progress</h1>
+      <div class="card mb16">
+        <h3 class="card-title">Overall Progress &nbsp; <span class="overall-val">72%</span></h3>
+        <div class="pbar big"><div class="pb-fill" style="width:72%;background:#0a1e4f"></div></div>
+      </div>
+      <div class="subject-progress">
+        <div class="sp-card"><div class="sp-sub">Maths</div><div class="sp-val" style="color:#2563eb">78%</div><div class="pbar"><div class="pb-fill" style="width:78%;background:#2563eb"></div></div><span class="sp-tag good">Good</span></div>
+        <div class="sp-card"><div class="sp-sub">Science</div><div class="sp-val" style="color:#16a34a">65%</div><div class="pbar"><div class="pb-fill" style="width:65%;background:#16a34a"></div></div><span class="sp-tag avg">Average</span></div>
+        <div class="sp-card"><div class="sp-sub">English</div><div class="sp-val" style="color:#9333ea">70%</div><div class="pbar"><div class="pb-fill" style="width:70%;background:#9333ea"></div></div><span class="sp-tag good">Good</span></div>
+        <div class="sp-card"><div class="sp-sub">Hindi</div><div class="sp-val" style="color:#ea580c">75%</div><div class="pbar"><div class="pb-fill" style="width:75%;background:#ea580c"></div></div><span class="sp-tag good">Good</span></div>
+        <div class="sp-card"><div class="sp-sub">SST</div><div class="sp-val" style="color:#c9a84c">68%</div><div class="pbar"><div class="pb-fill" style="width:68%;background:#c9a84c"></div></div><span class="sp-tag high">High</span></div>
+      </div>
+      <div class="card mt16">
+        <h3 class="card-title">Progress Over Time</h3>
+        <canvas id="progressChart" height="120"></canvas>
+      </div>
+    </section>
+
+    <!-- ═══ PAYMENTS ═══ -->
+    <section id="sec-payments" class="section">
+      <h1 class="sec-title">Payments</h1>
+      <div style="text-align:right;margin-bottom:16px"><button class="btn-pay">💳 Pay Online</button></div>
+      <div class="card">
+        <div class="pay-table">
+          <div class="pt-row header"><span>Invoice ID</span><span>Date</span><span>Description</span><span>Amount</span><span>Status</span><span>Action</span></div>
+          <div class="pt-row"><span>INV-2024-01</span><span>10 Mar, 2024</span><span>Tuition Fees (Mar)</span><span>₹1,000</span><span class="tag paid-tag">Paid</span><span><a href="#" class="receipt-link">Receipt</a></span></div>
+          <div class="pt-row"><span>INV-2024-02</span><span>10 Apr, 2024</span><span>Tuition Fees (Apr)</span><span>₹1,000</span><span class="tag paid-tag">Paid</span><span><a href="#" class="receipt-link">Receipt</a></span></div>
+          <div class="pt-row"><span>INV-2024-03</span><span>10 May, 2024</span><span>Tuition Fees (May)</span><span>₹1,000</span><span class="tag unpaid-tag">Unpaid</span><span><button class="btn-payrow">Pay Now</button></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PROFILE ═══ -->
+    <section id="sec-profile" class="section">
+      <h1 class="sec-title">My Profile</h1>
+      <div class="profile-card">
+        <div class="profile-avatar">A</div>
+        <div class="profile-details">
+          <h2>Aarav Sharma</h2>
+          <p class="profile-sub">Class 6 &nbsp;|&nbsp; Roll No: 12 &nbsp;|&nbsp; Session: 2024-25</p>
+          <div class="profile-grid">
+            <div><label>Father's Name</label><p>Rajesh Sharma</p></div>
+            <div><label>Mother's Name</label><p>Priya Sharma</p></div>
+            <div><label>Phone</label><p>+91 98712 34567</p></div>
+            <div><label>Email</label><p>aarav@example.com</p></div>
+            <div><label>Address</label><p>RZ-132, Nihal Vihar, New Delhi</p></div>
+            <div><label>Date of Birth</label><p>14 March, 2013</p></div>
+          </div>
+          <button class="btn-edit">✏️ Edit Profile</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

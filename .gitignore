@@ -1,0 +1,14 @@
+# JSM Shiksha Academy — Deployment Files
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+*.sqlite3
+node_modules/
+.next/
+.DS_Store
+media/
+staticfiles/
+*.log
