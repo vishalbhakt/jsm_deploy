@@ -4,7 +4,6 @@ import HeroSection from '@/components/HeroSection';
 import Footer from '@/components/Footer';
 import ToastContainer from '@/components/ToastContainer';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useState } from 'react';
 import { enquiriesAPI } from '@/lib/api';
 

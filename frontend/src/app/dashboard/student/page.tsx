@@ -24,11 +24,19 @@ export default function StudentDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (!stored) { router.push('/login'); return; }
-    const u = JSON.parse(stored);
-    setUser(u);
-    dashboardAPI.stats().then(r => setStats(r.data)).finally(() => setLoading(false));
+    const init = async () => {
+      const stored = localStorage.getItem('user');
+      if (!stored) { router.push('/login'); return; }
+      const u = JSON.parse(stored);
+      setUser(u);
+      try {
+        const r = await dashboardAPI.stats();
+        setStats(r.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, [router]);
 
   useEffect(() => {

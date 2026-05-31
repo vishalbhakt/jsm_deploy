@@ -1,9 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { dashboardAPI, studentsAPI, attendanceAPI, assignmentsAPI, notesAPI, videoLecturesAPI } from '@/lib/api';
+import { API_BASE, dashboardAPI, studentsAPI, attendanceAPI, assignmentsAPI, notesAPI, videoLecturesAPI } from '@/lib/api';
+
+const adminUrl = API_BASE.replace('/api', '/admin');
 
 const navItems = [
   { icon: '🏠', label: 'Overview', section: 'overview' },
@@ -26,14 +27,21 @@ export default function TeacherDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (!stored) { router.push('/login'); return; }
-    setUser(JSON.parse(stored));
-    dashboardAPI.stats().then(r => setStats(r.data));
-    studentsAPI.list().then(r => {
-      const d = r.data;
-      setStudents(Array.isArray(d) ? d : (d.results || []));
-    }).finally(() => setLoading(false));
+    const init = async () => {
+      const stored = localStorage.getItem('user');
+      if (!stored) { router.push('/login'); return; }
+      setUser(JSON.parse(stored));
+      try {
+        const statRes = await dashboardAPI.stats();
+        setStats(statRes.data);
+        const stuRes = await studentsAPI.list();
+        const d = stuRes.data;
+        setStudents(Array.isArray(d) ? d : (d.results || []));
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, [router]);
 
   useEffect(() => {
@@ -179,7 +187,7 @@ export default function TeacherDashboard() {
                   <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
                     <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
                     <p>No {section} yet. Add from Django Admin panel.</p>
-                    <a href="http://localhost:8000/admin" target="_blank" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 700, display: 'inline-block', marginTop: '12px' }}>Open Admin Panel →</a>
+                    <a href={adminUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 700, display: 'inline-block', marginTop: '12px' }}>Open Admin Panel →</a>
                   </div>
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>

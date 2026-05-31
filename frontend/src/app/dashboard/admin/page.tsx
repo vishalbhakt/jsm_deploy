@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { dashboardAPI, announcementsAPI, eventsAPI, studentsAPI, teachersAPI, usersAPI, attendanceAPI, enquiriesAPI } from '@/lib/api';
-import { FiUsers, FiUserCheck, FiBook, FiBell, FiCalendar, FiLogOut, FiSettings, FiChevronRight } from 'react-icons/fi';
+import { dashboardAPI, announcementsAPI, eventsAPI, studentsAPI, teachersAPI, usersAPI, enquiriesAPI } from '@/lib/api';
 
 const navItems = [
   { icon: '🏠', label: 'Dashboard', section: 'overview' },
@@ -25,12 +24,20 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (!stored) { router.push('/login'); return; }
-    const u = JSON.parse(stored);
-    if (u.role !== 'ADMIN' && u.role !== 'admin') { router.push('/login'); return; }
-    setUser(u);
-    dashboardAPI.stats().then(r => setStats(r.data)).finally(() => setLoading(false));
+    const init = async () => {
+      const stored = localStorage.getItem('user');
+      if (!stored) { router.push('/login'); return; }
+      const u = JSON.parse(stored);
+      if (u.role !== 'ADMIN' && u.role !== 'admin') { router.push('/login'); return; }
+      setUser(u);
+      try {
+        const r = await dashboardAPI.stats();
+        setStats(r.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, [router]);
 
   useEffect(() => {
