@@ -1,9 +1,9 @@
-services:
+databases:
   # 1. PostgreSQL Database
-  - type: psql
-    name: jsm-db
+  - name: jsm-db
     plan: free # Change to starter for production usage
 
+services:
   # 2. Django Backend
   - type: web
     name: jsm-backend
