@@ -8,8 +8,8 @@ services:
   - type: web
     name: jsm-backend
     env: python
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120"
+    buildCommand: "cd backend && pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "cd backend && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -35,8 +35,8 @@ services:
   - type: web
     name: jsm-frontend
     env: node
-    buildCommand: "npm install && npm run build"
-    startCommand: "npm run start"
+    buildCommand: "cd frontend && npm install && npm run build"
+    startCommand: "cd frontend && npm run start"
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:
