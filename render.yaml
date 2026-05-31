@@ -30,20 +30,3 @@ services:
       - key: CLOUDINARY_API_SECRET
         value: "your-cloudinary-secret"
     rootDir: backend
-
-  # 3. Next.js Frontend
-  - type: web
-    name: jsm-frontend
-    env: node
-    buildCommand: "cd frontend && npm install && npm run build"
-    startCommand: "cd frontend && npm run start"
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: jsm-backend
-          envVarKey: RENDER_EXTERNAL_URL
-          # Appends /api to the backend URL automatically
-      - key: PORT # Render assigns this
-        value: "3000"
-    rootDir: frontend
