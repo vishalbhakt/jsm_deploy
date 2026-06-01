@@ -153,7 +153,7 @@ export default function StudentDashboard() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
                 <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9' }}>
-                  <h2 style={{ fontFamily: 'Newsreader, serif', color: 'var(--navy)', fontSize: '20px' }}>{data.length} Items</h2>
+                  <h2 style={{ fontFamily: 'Newsreader, serif', color: 'var(--navy)', fontSize: '20px', textTransform: 'capitalize' }}>{section}</h2>
                 </div>
                 {data.length === 0 ? (
                   <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>
@@ -161,15 +161,31 @@ export default function StudentDashboard() {
                     <p>No {section} found yet.</p>
                   </div>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', padding: '20px' }}>
-                    {(data as Array<Record<string, unknown>>).map((item, i) => (
-                      <div key={i} style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px' }}>
-                        {Object.entries(item).slice(0, 5).map(([k, v]) => (
-                          <div key={k} style={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
-                            <span style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 700, minWidth: '80px', textTransform: 'capitalize' }}>{k}:</span>
-                            <span style={{ color: '#475569', fontSize: '13px' }}>{String(v ?? '-').slice(0, 60)}</span>
-                          </div>
-                        ))}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', padding: '24px' }}>
+                    {(data as Array<Record<string, any>>).map((item, i) => (
+                      <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <span style={{ background: 'rgba(201,162,39,0.1)', color: 'var(--gold)', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 700 }}>{item.subject_name || 'General'}</span>
+                          <span style={{ color: '#94a3b8', fontSize: '11px' }}>{new Date(item.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--navy)' }}>{item.title}</h3>
+                        <p style={{ fontSize: '13px', color: '#64748b', lineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{item.description || item.content || 'No description provided.'}</p>
+                        
+                        <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>By: {item.teacher_name || 'Staff'}</span>
+                          
+                          {/* Action Buttons */}
+                          {(item.file || item.video_file) && (
+                            <a href={item.file || item.video_file} target="_blank" rel="noopener noreferrer" style={{ background: 'var(--navy)', color: '#fff', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>
+                              ⬇️ Download
+                            </a>
+                          )}
+                          {item.video_url && (
+                            <a href={item.video_url} target="_blank" rel="noopener noreferrer" style={{ background: '#ef4444', color: '#fff', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>
+                              🎬 Watch
+                            </a>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
