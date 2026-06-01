@@ -60,6 +60,10 @@ class IsAdminUser(permissions.BasePermission):
             request.user.is_superuser or request.user.role == 'ADMIN'
         )
 
+class IsTeacherUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'TEACHER'
+
 class IsTeacherOrAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
@@ -98,7 +102,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminUser()]
 
 
@@ -109,26 +113,40 @@ class SubjectViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminUser()]
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.all().select_related('user', 'course')
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'ADMIN' or user.is_superuser:
+            return Student.objects.all().select_related('user', 'course')
+        if user.role == 'TEACHER':
+            return Student.objects.all().select_related('user', 'course')
+        if user.role == 'PARENT':
+            parent_profile = getattr(user, 'parent_profile', None)
+            if parent_profile:
+                return parent_profile.children.all().select_related('user', 'course')
+        if user.role == 'STUDENT':
+            return Student.objects.filter(user=user).select_related('user', 'course')
+        return Student.objects.none()
+
 
 class TeacherViewSet(viewsets.ModelViewSet):
-    queryset = Teacher.objects.all().select_related('user')
     serializer_class = TeacherSerializer
+    permission_classes = [IsAuthenticated]
     pagination_class = None
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    def get_queryset(self):
+        user = self.request.user
+        if user.role in ['ADMIN', 'TEACHER'] or user.is_superuser:
+            return Teacher.objects.all().select_related('user')
+        return Teacher.objects.all().select_related('user') # Allow all to see teachers
 
     @action(detail=False, methods=['get', 'patch'], permission_classes=[IsAuthenticated])
     def me(self, request):
@@ -149,54 +167,73 @@ class TeacherViewSet(viewsets.ModelViewSet):
 
 
 class ParentViewSet(viewsets.ModelViewSet):
-    queryset = Parent.objects.all()
     serializer_class = ParentSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'ADMIN' or user.is_superuser:
+            return Parent.objects.all().select_related('user')
+        if user.role == 'PARENT':
+            return Parent.objects.filter(user=user).select_related('user')
+        return Parent.objects.none()
+
 
 class AssignmentViewSet(viewsets.ModelViewSet):
-    queryset = Assignment.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
     serializer_class = AssignmentSerializer
     permission_classes = [IsTeacherOrAdmin]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        subject = self.request.query_params.get('subject')
-        if subject:
-            qs = qs.filter(subject_id=subject)
-        # Students should only see assignments for their subjects
-        if self.request.user.role == 'STUDENT':
-            student_course = getattr(self.request.user, 'student_profile', None)
-            if student_course and student_course.course:
-                qs = qs.filter(subject__course=student_course.course)
-        return qs
+        user = self.request.user
+        qs = Assignment.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'TEACHER':
+            teacher = getattr(user, 'teacher_profile', None)
+            return qs.filter(teacher=teacher)
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            if student and student.course:
+                return qs.filter(subject__course=student.course)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(subject__course__students__parents=parent).distinct()
+        return qs.none()
     
     def perform_create(self, serializer):
         teacher = getattr(self.request.user, 'teacher_profile', None)
         if teacher:
             serializer.save(teacher=teacher)
         else:
-            # Fallback for admin users testing the endpoint
             serializer.save(teacher_id=self.request.data.get('teacher'))
 
 
 class AttendanceViewSet(viewsets.ModelViewSet):
-    queryset = Attendance.objects.all().select_related('student__user').order_by('-date')
     serializer_class = AttendanceSerializer
     permission_classes = [IsTeacherOrAdmin]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        student = self.request.query_params.get('student')
-        date = self.request.query_params.get('date')
-        if student:
-            qs = qs.filter(student_id=student)
-        if date:
-            qs = qs.filter(date=date)
-        return qs
+        user = self.request.user
+        qs = Attendance.objects.all().select_related('student__user').order_by('-date')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'TEACHER':
+            teacher = getattr(user, 'teacher_profile', None)
+            return qs.filter(marked_by=teacher)
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            return qs.filter(student=student)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(student__parents=parent)
+        return qs.none()
     
     def perform_create(self, serializer):
         teacher = getattr(self.request.user, 'teacher_profile', None)
@@ -207,39 +244,49 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all().order_by('-due_date')
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        student = self.request.query_params.get('student')
-        if student:
-            qs = qs.filter(student_id=student)
-        if self.request.user.role == 'STUDENT':
-            student_profile = getattr(self.request.user, 'student_profile', None)
-            if student_profile:
-                qs = qs.filter(student=student_profile)
-        return qs
+        user = self.request.user
+        qs = Payment.objects.all().order_by('-due_date')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            return qs.filter(student=student)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(student__parents=parent)
+        return qs.none()
 
 
 class VideoLectureViewSet(viewsets.ModelViewSet):
-    queryset = VideoLecture.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
     serializer_class = VideoLectureSerializer
     permission_classes = [IsTeacherOrAdmin]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        subject = self.request.query_params.get('subject')
-        if subject:
-            qs = qs.filter(subject_id=subject)
-        if self.request.user.role == 'STUDENT':
-            student_course = getattr(self.request.user, 'student_profile', None)
-            if student_course and student_course.course:
-                qs = qs.filter(subject__course=student_course.course)
-        return qs
+        user = self.request.user
+        qs = VideoLecture.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'TEACHER':
+            teacher = getattr(user, 'teacher_profile', None)
+            return qs.filter(teacher=teacher)
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            if student and student.course:
+                return qs.filter(subject__course=student.course)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(subject__course__students__parents=parent).distinct()
+        return qs.none()
         
     def perform_create(self, serializer):
         teacher = getattr(self.request.user, 'teacher_profile', None)
@@ -256,8 +303,17 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminUser()]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'ADMIN' or user.is_superuser:
+            return Announcement.objects.all().order_by('-created_at')
+        
+        role_map = {'STUDENT': 'STUDENTS', 'TEACHER': 'TEACHERS', 'PARENT': 'PARENTS'}
+        audience_tag = role_map.get(user.role, 'ALL')
+        return Announcement.objects.filter(models.Q(audience='ALL') | models.Q(audience=audience_tag)).order_by('-created_at')
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -267,7 +323,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminUser()]
 
 
@@ -278,44 +334,56 @@ class GalleryViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminUser()]
 
 
 class ResultViewSet(viewsets.ModelViewSet):
-    queryset = Result.objects.all().order_by('-date')
     serializer_class = ResultSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        student = self.request.query_params.get('student')
-        if student:
-            qs = qs.filter(student_id=student)
-        if self.request.user.role == 'STUDENT':
-            student_profile = getattr(self.request.user, 'student_profile', None)
-            if student_profile:
-                qs = qs.filter(student=student_profile)
-        return qs
+        user = self.request.user
+        qs = Result.objects.all().order_by('-date')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'TEACHER':
+            return qs # Teachers can see all results
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            return qs.filter(student=student)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(student__parents=parent)
+        return qs.none()
 
 
 class NoteViewSet(viewsets.ModelViewSet):
-    queryset = Note.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
     serializer_class = NoteSerializer
     permission_classes = [IsTeacherOrAdmin]
     pagination_class = None
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        subject = self.request.query_params.get('subject')
-        if subject:
-            qs = qs.filter(subject_id=subject)
-        if self.request.user.role == 'STUDENT':
-            student_course = getattr(self.request.user, 'student_profile', None)
-            if student_course and student_course.course:
-                qs = qs.filter(subject__course=student_course.course)
-        return qs
+        user = self.request.user
+        qs = Note.objects.all().select_related('subject', 'teacher__user').order_by('-created_at')
+        
+        if user.is_superuser or user.role == 'ADMIN':
+            return qs
+        if user.role == 'TEACHER':
+            teacher = getattr(user, 'teacher_profile', None)
+            return qs.filter(teacher=teacher)
+        if user.role == 'STUDENT':
+            student = getattr(user, 'student_profile', None)
+            if student and student.course:
+                return qs.filter(subject__course=student.course)
+        if user.role == 'PARENT':
+            parent = getattr(user, 'parent_profile', None)
+            if parent:
+                return qs.filter(subject__course__students__parents=parent).distinct()
+        return qs.none()
         
     def perform_create(self, serializer):
         teacher = getattr(self.request.user, 'teacher_profile', None)
