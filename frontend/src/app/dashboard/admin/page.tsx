@@ -10,10 +10,17 @@ const navItems = [
   { icon: '🎓', label: 'Academics', section: 'academics' },
   { icon: '👥', label: 'Students', section: 'students' },
   { icon: '👨‍🏫', label: 'Teachers', section: 'teachers' },
+  { icon: '👤', label: 'Users', section: 'users' },
   { icon: '✅', label: 'Approvals', section: 'approvals' },
+  { icon: '📋', label: 'Assignments', section: 'assignments' },
+  { icon: '📝', label: 'Notes', section: 'notes' },
+  { icon: '🎬', label: 'Videos', section: 'videos' },
+  { icon: '💳', label: 'Payments', section: 'payments' },
+  { icon: '📊', label: 'Results', section: 'results' },
   { icon: '📢', label: 'Announcements', section: 'announcements' },
   { icon: '📋', label: 'Enquiries', section: 'enquiries' },
   { icon: '📅', label: 'Events', section: 'events' },
+  { icon: '🖼️', label: 'Gallery', section: 'gallery' },
 ];
 
 export default function AdminDashboard() {
@@ -66,10 +73,17 @@ export default function AdminDashboard() {
     const loaders: Record<string, () => Promise<unknown>> = {
       students: () => studentsAPI.list(),
       teachers: () => teachersAPI.list(),
+      users: () => usersAPI.list(),
       approvals: () => usersAPI.pending(),
+      assignments: () => assignmentsAPI.list(),
+      notes: () => notesAPI.list(),
+      videos: () => videoLecturesAPI.list(),
+      payments: () => paymentsAPI.list(),
+      results: () => resultsAPI.list(),
       announcements: () => announcementsAPI.list(),
       enquiries: () => enquiriesAPI.list(),
       events: () => eventsAPI.list(),
+      gallery: () => galleryAPI.list(),
       academics: async () => {
         const c = await coursesAPI.list();
         const s = await subjectsAPI.list();
@@ -89,6 +103,17 @@ export default function AdminDashboard() {
   }, [section]);
 
   const logout = () => { localStorage.clear(); router.push('/login'); };
+
+  const renderValue = (val: any): string => {
+    if (val === null || val === undefined) return '-';
+    if (typeof val === 'object') {
+      if (val.name) return val.name;
+      if (val.username) return val.username;
+      if (val.first_name) return `${val.first_name} ${val.last_name || ''}`;
+      return '-';
+    }
+    return String(val);
+  };
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -251,20 +276,24 @@ export default function AdminDashboard() {
                   {data.length === 0 ? (
                     <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>No records found.</div>
                   ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                       <thead>
                         <tr style={{ background: '#f8fafc' }}>
-                          {Object.keys((data[0] as object)).slice(0, 6).map(k => (
-                            <th key={k} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k}</th>
+                          <th style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '11px', textTransform: 'uppercase' }}>#</th>
+                          {Object.keys((data[0] as object)).filter(k => !['id', 'password', 'password2'].includes(k)).slice(0, 6).map(k => (
+                            <th key={k} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k.replace('_', ' ')}</th>
                           ))}
-                          {section === 'approvals' && <th style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '12px' }}>ACTION</th>}
+                          {section === 'approvals' && <th style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '11px' }}>ACTION</th>}
                         </tr>
                       </thead>
                       <tbody>
-                        {(data as Array<Record<string, unknown>>).map((row, i) => (
+                        {(data as Array<Record<string, unknown>>).map((row: any, i) => (
                           <tr key={i} style={{ borderTop: '1px solid #f1f5f9' }}>
-                            {Object.values(row).slice(0, 6).map((v, j) => (
-                              <td key={j} style={{ padding: '12px 16px', color: '#475569' }}>{String(v ?? '-').slice(0, 50)}</td>
+                            <td style={{ padding: '12px 16px', color: '#94a3b8' }}>{i + 1}</td>
+                            {Object.keys(row).filter(k => !['id', 'password', 'password2'].includes(k)).slice(0, 6).map((k, j) => (
+                              <td key={j} style={{ padding: '12px 16px', color: '#475569' }}>
+                                {renderValue(row[k])}
+                              </td>
                             ))}
                             {section === 'approvals' && (
                               <td style={{ padding: '12px 16px' }}>
