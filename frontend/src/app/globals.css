@@ -140,3 +140,24 @@ h1, h2, h3, h4 {
 }
 .toast-success { background: #22c55e; color: white; }
 .toast-error { background: #ef4444; color: white; }
+
+/* ── Dashboard Responsiveness ── */
+@media (min-width: 768px) {
+  .sidebar-responsive {
+    position: static !important;
+    left: 0 !important;
+  }
+  .mobile-menu-btn {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  .main-content-responsive > div:nth-child(2) {
+    padding: 16px !important;
+  }
+}
+

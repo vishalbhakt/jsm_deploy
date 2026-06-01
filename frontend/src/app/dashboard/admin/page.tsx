@@ -98,12 +98,21 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main */}
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div className="main-content-responsive" style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
-        <div style={{ background: '#fff', padding: '16px 32px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 style={{ fontFamily: 'Newsreader, serif', color: 'var(--navy)', fontSize: '22px' }}>
-            {navItems.find(n => n.section === section)?.label || 'Dashboard'}
-          </h1>
+        <div style={{ background: '#fff', padding: '16px 32px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 30 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button 
+              className="mobile-menu-btn"
+              onClick={() => setSidebarOpen(true)}
+              style={{ background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', display: 'none', color: 'var(--navy)' }}
+            >
+              ☰
+            </button>
+            <h1 style={{ fontFamily: 'Newsreader, serif', color: 'var(--navy)', fontSize: '22px' }}>
+              {navItems.find(n => n.section === section)?.label || 'Dashboard'}
+            </h1>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gold)', fontWeight: 700, fontSize: '14px' }}>
               {user?.username?.[0]?.toUpperCase()}
@@ -180,6 +189,15 @@ export default function AdminDashboard() {
                     </table>
                   )}
                 </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+/div>
               </div>
             </motion.div>
           )}
