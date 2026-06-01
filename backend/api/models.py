@@ -15,6 +15,12 @@ class User(AbstractUser):
     is_approved = models.BooleanField(default=False)
     profile_photo = models.ImageField(upload_to='profiles/', null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.role = 'ADMIN'
+            self.is_approved = True
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.username} ({self.role})"
 
