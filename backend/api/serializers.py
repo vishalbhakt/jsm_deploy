@@ -90,6 +90,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = '__all__'
+        read_only_fields = ('teacher',)
 
     def get_teacher_name(self, obj):
         return obj.teacher.user.get_full_name() or obj.teacher.user.username
@@ -101,6 +102,7 @@ class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attendance
         fields = '__all__'
+        read_only_fields = ('marked_by',)
 
     def get_student_name(self, obj):
         return obj.student.user.get_full_name() or obj.student.user.username
@@ -124,6 +126,7 @@ class VideoLectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoLecture
         fields = '__all__'
+        read_only_fields = ('teacher',)
 
     def get_teacher_name(self, obj):
         return obj.teacher.user.get_full_name() or obj.teacher.user.username
@@ -175,6 +178,7 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
         fields = '__all__'
+        read_only_fields = ('teacher',)
 
     def get_teacher_name(self, obj):
         return obj.teacher.user.get_full_name() or obj.teacher.user.username
@@ -184,4 +188,3 @@ class EnquirySerializer(serializers.ModelSerializer):
     class Meta:
         model = Enquiry
         fields = '__all__'
-'
