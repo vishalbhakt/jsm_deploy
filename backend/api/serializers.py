@@ -135,6 +135,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = '__all__'
+        read_only_fields = ('author',)
 
     def get_author_name(self, obj):
         if obj.author:
@@ -183,3 +184,4 @@ class EnquirySerializer(serializers.ModelSerializer):
     class Meta:
         model = Enquiry
         fields = '__all__'
+'
